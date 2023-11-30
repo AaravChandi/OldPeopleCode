@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 
 @TeleOp
 public class CommandBasedTeleOp extends BaseRobot {
@@ -25,6 +27,11 @@ public class CommandBasedTeleOp extends BaseRobot {
                         () -> drive.mecanum(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x)
                 )
         );
+        /*drive.setDefaultCommand(
+                new RunCommand(
+                        () -> drive.enablePositionPID()
+                )
+        );*/
     }
 
     @Override
@@ -39,30 +46,18 @@ public class CommandBasedTeleOp extends BaseRobot {
     public void loop() {
         // Allows CommandScheduler.run() to be called - DO NOT DELETE!
         super.loop();
+        new Trigger(gamepad1.y,
+                new RunCommand(( () -> {drive.imu.initialize(hardwareMap,
+                        RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                        RevHubOrientationOnRobot.UsbFacingDirection.UP);})));
+        //drive.setDriveBias(arm.getDriveBias());
 
-        drive.setDriveBias(arm.getDriveBias());
 
-        new Trigger(gamepad1.a, new RunCommand(() -> {
-            if (!Clock.hasElapsed(debounce, 0.5)) return;
-            if (arm.clawClosed()) {
-                arm.openClaw();
-                if (arm.atHub()) {
-                    arm.setState(ArmSubsystem.State.BOTTOM);
-                }
-            } else {
-                arm.closeClaw();
-                CommandScheduler.getInstance().scheduleCommand(
-                        new WaitCommand(0.5)
-                                .then(new RunCommand(() -> {
-                                    if (arm.atStacks()) arm.setState(ArmSubsystem.State.LOW);
-                                    else arm.setState(ArmSubsystem.State.HUB);
-                                }))
-                );
-            }
-            debounce = Clock.now();
-        }));
+        new Trigger(gamepad1.right_trigger>0.5, new RunCommand(( () -> intake.setState(IntakeSubsystem.State.INTAKING))));
+        new Trigger(gamepad1.left_trigger>0.5, new RunCommand(( () -> intake.setState(IntakeSubsystem.State.OUTTAKING))));
 
-        new Trigger(gamepad1.b, new DropConeCommand(arm));
+
+        /*
 
         new Trigger(gamepad1.x, new RunCommand(() -> {
             arm.setState(ArmSubsystem.State.STACK);
@@ -83,5 +78,7 @@ public class CommandBasedTeleOp extends BaseRobot {
         new Trigger(gamepad1.dpad_down, new RunCommand(() -> {
             arm.setState(ArmSubsystem.State.BOTTOM);
         }));
+
+         */
     }
 }
