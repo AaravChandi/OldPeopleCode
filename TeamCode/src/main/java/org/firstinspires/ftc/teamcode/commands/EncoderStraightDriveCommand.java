@@ -20,9 +20,9 @@ public class EncoderStraightDriveCommand extends Command {
         super(drive);
         this.drive = drive;
         if(direction.equals("forward"))
-            this.leftY = -0.3;
+            this.leftY = 0.02;
         else
-            this.leftY = 0.3;
+            this.leftY = -0.02;
         this.leftX = 0;
         this.rightX = 0;
         this.xPos = 0;
@@ -37,6 +37,9 @@ public class EncoderStraightDriveCommand extends Command {
     public void init() {
         //drive.parallelEncoder.resetEncoder();
         //drive.perpendicularEncoder.resetEncoder();
+        drive.perpendicularEncoder.resetEncoder();
+        drive.parallelEncoder.resetEncoder();
+
     }
     public static double encoderTicksToInches(double ticks) {
 
@@ -74,34 +77,13 @@ public class EncoderStraightDriveCommand extends Command {
     double difference = 0;
     double percentage = 0;
     //@Override
-    public void executeAttempt() {
-        difference = Math.abs(yPos - drive.parallelEncoder.getCurrentPosition());
-        if (difference<0.25*Math.abs(yPos)) {
-            drive.mecanum(0.2, 0, 0);
-        }
-        else if (difference<0.5*Math.abs(yPos)) {
-            percentage = (difference/(Math.abs(yPos)/2));
-            percentage = Range.clip(percentage, 0.2, 0.8);
-            drive.mecanum(percentage, 0, 0);
-        }
-        else if (difference<0.75*Math.abs(yPos)) {
-
-            percentage = (Math.abs(difference-Math.abs(yPos)))/(Math.abs(yPos)/2);
-            percentage = Range.clip(percentage, 0.2, 0.8);
-            drive.mecanum(percentage, 0,  0);
-        }
-        else
-            drive.mecanum(0.2, 0, 0);
-
-        // drive.automecanum(leftY, leftX, rightX);
-
-    }
 
     // Called once after isFinished() returns true
     @Override
     public void end() {
         //drive.parallelEncoder.resetEncoder();
         //drive.perpendicularEncoder.resetEncoder();
+        drive.mecanum(0, 0, 0);
     }
 
     // Specifies whether or not the command has finished

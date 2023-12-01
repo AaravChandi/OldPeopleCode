@@ -41,7 +41,7 @@ public class DriveCommand extends Command {
     // Called once after isFinished() returns true
     @Override
     public void end() {
-
+        drive.mecanum(0,0,0);
     }
 
     // Specifies whether or not the command has finished

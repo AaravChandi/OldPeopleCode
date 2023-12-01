@@ -24,7 +24,7 @@ public class CommandBasedTeleOp extends BaseRobot {
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(
                 new RunCommand(
-                        () -> drive.mecanum(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x)
+                        () -> drive.mecanum(0.4*-gamepad1.left_stick_y, 0.4*-gamepad1.left_stick_x, 0.4*-gamepad1.right_stick_x)
                 )
         );
         /*drive.setDefaultCommand(
@@ -53,8 +53,9 @@ public class CommandBasedTeleOp extends BaseRobot {
         //drive.setDriveBias(arm.getDriveBias());
 
 
-        new Trigger(gamepad1.right_trigger>0.5, new RunCommand(( () -> intake.setState(IntakeSubsystem.State.INTAKING))));
+        /*new Trigger(gamepad1.right_trigger>0.5, new RunCommand(( () -> intake.setState(IntakeSubsystem.State.INTAKING))));
         new Trigger(gamepad1.left_trigger>0.5, new RunCommand(( () -> intake.setState(IntakeSubsystem.State.OUTTAKING))));
+        new Trigger(gamepad1.left_trigger<0.5 && gamepad1.right_trigger<0.5, new RunCommand(( () -> intake.setState(IntakeSubsystem.State.PAUSED))));*/
 
 
         /*

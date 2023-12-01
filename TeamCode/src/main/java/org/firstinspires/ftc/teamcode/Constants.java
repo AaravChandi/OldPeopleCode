@@ -18,7 +18,7 @@ public class Constants {
                 "rightRear"
         };
         public static final double K_DRIVE_P = 5;
-        public static final PositionPID K_DRIVE_P1 = new PositionPID(50);
+        public static final PositionPID K_DRIVE_P1 = new PositionPID(0.1);
         public static final FFController[] kFFs = new FFController[]{
                 new FFController(0.047),
                 new FFController(0.07),

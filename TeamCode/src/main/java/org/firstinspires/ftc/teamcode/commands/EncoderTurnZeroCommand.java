@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.util.Range;
 
-public class EncoderTurnDriveCommand extends Command {
+public class EncoderTurnZeroCommand extends Command {
     private final DriveSubsystem drive;
     private double startTime;
     private double degrees;
@@ -20,23 +20,21 @@ public class EncoderTurnDriveCommand extends Command {
     public static double TICKS_PER_REV = 8192;
     public static double WHEEL_RADIUS = 1; // in
 
-    public EncoderTurnDriveCommand(DriveSubsystem drive, String direction, double degrees) {
+    public EncoderTurnZeroCommand(DriveSubsystem drive) {
         // You MUST call the parent class constructor and pass through any subsystems you use
         super(drive);
         this.drive = drive;
         this.leftY = 0;
         this.leftX = 0;
-        this.degrees = degrees;
-        this.direction = direction;
         //initialHeading = drive.imu.getYaw(AngleUnit.DEGREES);
         //TODO: switch cc/cw input to based on +/- of degrees where positive is clockwise
 
-        if(direction.equals("cw")) {
-            this.rightX = 0.01;
+        if(drive.imu.getYaw(AngleUnit.DEGREES) <0) {
+            this.rightX = -0.04;
             //fullDegrees = drive.imu.getYaw(AngleUnit.DEGREES) + degrees;
         }
         else {
-            this.rightX = -0.01;
+            this.rightX = 0.04;
             //fullDegrees = -drive.imu.getYaw(AngleUnit.DEGREES) - degrees;
         }
 
@@ -58,12 +56,7 @@ public class EncoderTurnDriveCommand extends Command {
 
     //@Override
     public void execute(){
-        if (direction.equals("cw")) {
-            drive.mecanum(0, 0, 0.02);
-        }
-        else {
-            drive.mecanum(0, 0, -0.02);
-        }
+        drive.mecanum(0, 0, rightX);
     }
 
     // Called once after isFinished() returns true
@@ -77,10 +70,10 @@ public class EncoderTurnDriveCommand extends Command {
     //TODO: IMU IS WEIRD VALUES ARHGILSHDG BIOSAalifuhdlafbohub
     @Override
     public boolean isFinished() {
-        if(direction.equals("cw")) //>0 means turning CW
-            return drive.imu.getYaw(AngleUnit.DEGREES)>fullDegrees*0.98;
+        if(this.rightX>0) //>0 means turning CW
+            return drive.imu.getYaw(AngleUnit.DEGREES)>-1;
         else //turning CCW
-            return drive.imu.getYaw(AngleUnit.DEGREES)<fullDegrees*1.02;
+            return drive.imu.getYaw(AngleUnit.DEGREES)<1;
 
     }
 }

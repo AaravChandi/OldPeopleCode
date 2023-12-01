@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.Constants.Drive.*;
+import static org.firstinspires.ftc.teamcode.commands.EncoderStraightDriveCommand.encoderTicksToInches;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
@@ -30,8 +32,10 @@ public class DriveSubsystem extends Subsystem {
     public DriveSubsystem(HardwareMap hardwareMap) {
         drive = new SHPMecanumDrive(hardwareMap, kMotorNames);
         drive.enableBuiltInVelocityControl();
-        for (int i = 0; i<4; i++)
+        for (int i = 0; i<4; i++) {
             drive.motors[i].enablePositionPID(K_DRIVE_P1);
+            drive.motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
 
         // Change logo direction and USB direction according to your hub orientation
         // Reference pictures: https://ftc-docs.firstinspires.org/programming_resources/imu/imu.html#orthogonal-mounting
@@ -39,7 +43,7 @@ public class DriveSubsystem extends Subsystem {
                 RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
                 RevHubOrientationOnRobot.UsbFacingDirection.UP);
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "parallelEncoder"));
-        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "perpendicularEncode"));
+        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "perpendicularEncoder"));
 
     }
 
@@ -49,7 +53,7 @@ public class DriveSubsystem extends Subsystem {
                 leftX
         ).rotated(-imu.getYaw(AngleUnit.RADIANS));
 
-        drive.mecanum(vector.getX(), vector.getY(), rightX); // field oriented
+        drive.mecanum(0.4*vector.getX(), 0.4*vector.getY(), 0.25*rightX); // field oriented
         //drive.mecanum(leftY * bias, leftX * bias, rightX * bias); // robot oriented
     }
 
@@ -95,10 +99,13 @@ public class DriveSubsystem extends Subsystem {
 
     @Override
     public void periodic(Telemetry telemetry) {
-//        telemetry.addData("Bot Direction: ", Math.toDegrees(imu.getYaw()));
+        telemetry.addData("Y Position: ", encoderTicksToInches(parallelEncoder.getCurrentPosition()));
+        telemetry.addData("X Position: ", encoderTicksToInches(perpendicularEncoder.getCurrentPosition()));
+        telemetry.addData("Robot Degrees: ", imu.getYaw(AngleUnit.DEGREES));
         for (int i = 0; i < 4; i++) {
             //telemetry.addData("Motor " + i + " Position: ", drive.getPositions(MotorUnit.TICKS)[i]);
         }
+
 //        telemetry.addData("Drive at position setpoint: ", drive.atPositionSetpoint() ? "true" : "false");
     }
 }

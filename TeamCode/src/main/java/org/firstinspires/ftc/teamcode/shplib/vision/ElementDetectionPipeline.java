@@ -38,11 +38,13 @@ public class ElementDetectionPipeline extends OpenCvPipeline {
     //edit as necessary
     static final Rect LEFT_ROI = new Rect(
             new Point(1, 1), //TODO: MAGIC NUMBERS ;-;
-            new Point(399, 447)
+            //new Point(399, 447)
+            new Point(500, 447)
     );
 
     static final Rect RIGHT_ROI = new Rect(
-            new Point(400, 1),
+            //new Point(400, 1),
+            new Point(501, 1),
             new Point(799, 447)
     );
 
@@ -138,13 +140,13 @@ public class ElementDetectionPipeline extends OpenCvPipeline {
 
     }
     public int getLocation(){
-        if(leftValue>rightValue && leftValue>0.5){
-            return 1;
-        }
-        if(rightValue>leftValue && rightValue>0.5){
+        if(leftValue>rightValue && leftValue>0.05){
             return 2;
         }
-        return 3;
+        if(rightValue>leftValue && rightValue>0.05){
+            return 3;
+        }
+        return 1;
 
     }
 }
