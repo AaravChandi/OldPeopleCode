@@ -1,23 +1,14 @@
 package org.firstinspires.ftc.teamcode.autos;
 
-import static org.firstinspires.ftc.teamcode.Constants.Drive.kMotorNames;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
-import org.firstinspires.ftc.teamcode.commands.DriveByCommand;
-import org.firstinspires.ftc.teamcode.commands.DriveCommand;
-import org.firstinspires.ftc.teamcode.commands.DropConeCommand;
 import org.firstinspires.ftc.teamcode.commands.EncoderStraightDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.EncoderTurnDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.EncoderTurnZeroCommand;
-import org.firstinspires.ftc.teamcode.commands.RaiseToHighCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
-import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
-import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @Autonomous(preselectTeleOp = "CommandBasedTeleOp")
@@ -56,7 +47,7 @@ public class TestAuto extends BaseRobot {
         myCommand.scheduleCommand(
                 new WaitCommand(2)
                         //.then(new RunCommand(() -> {location = vision.getLocation();}))
-                        .then(new EncoderStraightDriveCommand(drive,"forward",10))
+                        .then(new EncoderStraightDriveCommand(drive,"forward",10,false))
                         .then(new WaitCommand(1))
                         .then(new EncoderTurnDriveCommand(drive,"cw",45))
                         .then(new WaitCommand(1))

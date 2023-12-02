@@ -15,18 +15,21 @@ public class EncoderStraightDriveCommand extends Command {
     public static double TICKS_PER_REV = 8192;
     public static double WHEEL_RADIUS = 1; // in
 
-    public EncoderStraightDriveCommand(DriveSubsystem drive, String direction, double distance) {
+    public boolean robot;
+
+    public EncoderStraightDriveCommand(DriveSubsystem drive, String direction, double distance,boolean robot) {
         // You MUST call the parent class constructor and pass through any subsystems you use
         super(drive);
         this.drive = drive;
         if(direction.equals("forward"))
-            this.leftY = 0.02;
+            this.leftY = 0.2;
         else
-            this.leftY = -0.02;
+            this.leftY = -0.2;
         this.leftX = 0;
         this.rightX = 0;
         this.xPos = 0;
-        this.yPos = inchesToEncoderTicks(distance);;
+        this.yPos = inchesToEncoderTicks(distance);
+        this.robot = robot;
         //System.out.println(xPos);
 
     }
@@ -63,12 +66,22 @@ public class EncoderStraightDriveCommand extends Command {
     // Called repeatedly until isFinished() returns true
     @Override
     public void execute() {
-        if (drive.parallelEncoder.getCurrentPosition()<0.2*Math.abs(yPos))
-            drive.mecanum(leftY, leftX, rightX);
-        else if (drive.parallelEncoder.getCurrentPosition()<0.8*Math.abs(yPos))
-            drive.mecanum(1.5*leftY, leftX, rightX);
-        else
-            drive.mecanum(leftY, leftX, rightX);
+        if (!robot) {
+            if (drive.parallelEncoder.getCurrentPosition() < 0.2 * Math.abs(yPos))
+                drive.mecanum(leftY, leftX, rightX);
+            else if (drive.parallelEncoder.getCurrentPosition() < 0.8 * Math.abs(yPos))
+                drive.mecanum(1.5 * leftY, leftX, rightX);
+            else
+                drive.mecanum(leftY, leftX, rightX);
+        }
+        else {
+            if (drive.parallelEncoder.getCurrentPosition() < 0.2 * Math.abs(yPos))
+                drive.robotmecanum(leftY, leftX, rightX);
+            else if (drive.parallelEncoder.getCurrentPosition() < 0.8 * Math.abs(yPos))
+                drive.robotmecanum(1.5 * leftY, leftX, rightX);
+            else
+                drive.robotmecanum(leftY, leftX, rightX);
+        }
 
         // drive.automecanum(leftY, leftX, rightX);
 

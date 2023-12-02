@@ -34,6 +34,7 @@ public class Constants {
     }
     public static final class Intake {
         public static final String kIntakeName = "intake"; //pos 1
+        public static final String kLiftName = "lift"; //pos 1
 
     }
 

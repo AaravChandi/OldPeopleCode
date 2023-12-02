@@ -30,11 +30,11 @@ public class EncoderTurnZeroCommand extends Command {
         //TODO: switch cc/cw input to based on +/- of degrees where positive is clockwise
 
         if(drive.imu.getYaw(AngleUnit.DEGREES) <0) {
-            this.rightX = -0.04;
+            this.rightX = -0.1;
             //fullDegrees = drive.imu.getYaw(AngleUnit.DEGREES) + degrees;
         }
         else {
-            this.rightX = 0.04;
+            this.rightX = 0.1;
             //fullDegrees = -drive.imu.getYaw(AngleUnit.DEGREES) - degrees;
         }
 
@@ -71,9 +71,9 @@ public class EncoderTurnZeroCommand extends Command {
     @Override
     public boolean isFinished() {
         if(this.rightX>0) //>0 means turning CW
-            return drive.imu.getYaw(AngleUnit.DEGREES)>-1;
+            return drive.imu.getYaw(AngleUnit.DEGREES)>-5;
         else //turning CCW
-            return drive.imu.getYaw(AngleUnit.DEGREES)<1;
+            return drive.imu.getYaw(AngleUnit.DEGREES)<5;
 
     }
 }

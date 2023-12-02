@@ -24,21 +24,8 @@ public class EncoderTurnDriveCommand extends Command {
         // You MUST call the parent class constructor and pass through any subsystems you use
         super(drive);
         this.drive = drive;
-        this.leftY = 0;
-        this.leftX = 0;
         this.degrees = degrees;
         this.direction = direction;
-        //initialHeading = drive.imu.getYaw(AngleUnit.DEGREES);
-        //TODO: switch cc/cw input to based on +/- of degrees where positive is clockwise
-
-        if(direction.equals("cw")) {
-            this.rightX = 0.01;
-            //fullDegrees = drive.imu.getYaw(AngleUnit.DEGREES) + degrees;
-        }
-        else {
-            this.rightX = -0.01;
-            //fullDegrees = -drive.imu.getYaw(AngleUnit.DEGREES) - degrees;
-        }
 
 
     }
@@ -59,10 +46,10 @@ public class EncoderTurnDriveCommand extends Command {
     //@Override
     public void execute(){
         if (direction.equals("cw")) {
-            drive.mecanum(0, 0, 0.02);
+            drive.mecanum(0, 0, -0.25);
         }
         else {
-            drive.mecanum(0, 0, -0.02);
+            drive.mecanum(0, 0, 0.25);
         }
     }
 
@@ -78,9 +65,9 @@ public class EncoderTurnDriveCommand extends Command {
     @Override
     public boolean isFinished() {
         if(direction.equals("cw")) //>0 means turning CW
-            return drive.imu.getYaw(AngleUnit.DEGREES)>fullDegrees*0.98;
+            return (drive.imu.getYaw(AngleUnit.DEGREES)*-1)>degrees*0.98;
         else //turning CCW
-            return drive.imu.getYaw(AngleUnit.DEGREES)<fullDegrees*1.02;
+            return (drive.imu.getYaw(AngleUnit.DEGREES))>degrees*0.98;
 
     }
 }

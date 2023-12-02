@@ -1,18 +1,18 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.Constants.Intake.kIntakeName;
+import static org.firstinspires.ftc.teamcode.Constants.Intake.kLiftName;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 
-public class IntakeSubsystem extends Subsystem {
+public class LiftSubsystem extends Subsystem {
     // Declare devices
     // Example:
-    private final SHPMotor intake;
+    private final SHPMotor lift;
 
     public enum State {
         // Define states
@@ -20,19 +20,19 @@ public class IntakeSubsystem extends Subsystem {
         // ENABLED, DISABLED
         INTAKING,
         OUTTAKING,
-        PAUSED
+        CARRY
     }
 
     private State state;
 
-    public IntakeSubsystem(HardwareMap hardwareMap) {
+    public LiftSubsystem(HardwareMap hardwareMap) {
         // Initialize devices
         // Example:
-        intake = new SHPMotor(hardwareMap, kIntakeName);
-
+        lift = new SHPMotor(hardwareMap, kLiftName);
+        lift.resetEncoder();
         // Set initial state
         // Example:
-        setState(State.PAUSED);
+        setState(State.INTAKING);
     }
 
     public void setState(State state) {
@@ -54,13 +54,13 @@ public class IntakeSubsystem extends Subsystem {
         // Example:
         switch (state) {
             case INTAKING:
-                intake.setPower(0.6);
+                lift.setPosition(0);
                 break;
             case OUTTAKING:
-                intake.setPower(-0.6);
+                lift.setPosition(1000);
                 break;
-            case PAUSED:
-                intake.setPower(0.0);
+            case CARRY:
+                lift.setPosition(500);
                 break;
         }
 

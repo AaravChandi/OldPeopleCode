@@ -33,8 +33,9 @@ public class DriveSubsystem extends Subsystem {
         drive = new SHPMecanumDrive(hardwareMap, kMotorNames);
         drive.enableBuiltInVelocityControl();
         for (int i = 0; i<4; i++) {
-            drive.motors[i].enablePositionPID(K_DRIVE_P1);
+            //drive.motors[i].enablePositionPID(K_DRIVE_P1);
             drive.motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            drive.motors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
         // Change logo direction and USB direction according to your hub orientation
@@ -51,10 +52,19 @@ public class DriveSubsystem extends Subsystem {
         Vector2d vector = new Vector2d(
                 leftY,
                 leftX
-        ).rotated(-imu.getYaw(AngleUnit.RADIANS));
+        ).rotated(-(imu.getYaw(AngleUnit.RADIANS)));
 
-        drive.mecanum(0.4*vector.getX(), 0.4*vector.getY(), 0.25*rightX); // field oriented
+        drive.mecanum(vector.getX(),vector.getY(), rightX); // field oriented
         //drive.mecanum(leftY * bias, leftX * bias, rightX * bias); // robot oriented
+    }
+    public void robotmecanum(double leftY, double leftX, double rightX) {
+        Vector2d vector = new Vector2d(
+                leftY,
+                leftX
+        ).rotated(-(imu.getYaw(AngleUnit.RADIANS)));
+
+        //drive.mecanum(vector.getX(),vector.getY(), rightX); // field oriented
+        drive.mecanum(leftY * bias, leftX * bias, rightX * bias); // robot oriented
     }
 
     public void setDriveBias(double driveBias) {
