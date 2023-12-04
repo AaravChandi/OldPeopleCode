@@ -14,7 +14,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ElementDetectionPipeline extends OpenCvPipeline {
+public class ElementDetectionPipelineBlue extends OpenCvPipeline {
     ArrayList<double[]> frameList;
 
     public static double strictLowS = 140; //TODO: Tune in dashboard
@@ -23,7 +23,7 @@ public class ElementDetectionPipeline extends OpenCvPipeline {
     public double leftValue;
     public double rightValue;
 
-    public ElementDetectionPipeline() {
+    public ElementDetectionPipelineBlue() {
         frameList = new ArrayList<>();
     }
 
@@ -37,7 +37,7 @@ public class ElementDetectionPipeline extends OpenCvPipeline {
     //we can draw rectangles on the screen to find the perfect fit
     //edit as necessary
     static final Rect LEFT_ROI = new Rect(
-            new Point(200, 1), //TODO: MAGIC NUMBERS ;-;
+            new Point(1, 1), //TODO: MAGIC NUMBERS ;-;
             //new Point(399, 447)
             new Point(500, 447)
     );
@@ -62,8 +62,8 @@ public class ElementDetectionPipeline extends OpenCvPipeline {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
         //Lower and upper bounds for the color to detect
-        Scalar lowHSV = new Scalar(0, 50, 70); //TODO: currently for RED. need to tune
-        Scalar highHSV = new Scalar(15, 255, 255); //bruh red is like 0-15 & 350-360 wtf
+        Scalar lowHSV = new Scalar(210/2, 50, 70); //TODO: currently for RED. need to tune
+        Scalar highHSV = new Scalar(250/2, 255, 255); //bruh red is like 0-15 & 350-360 wtf
 
         Mat detected = new Mat();
         Core.inRange(mat, lowHSV, highHSV, detected); //ONLY returns the pixels in the HSV range

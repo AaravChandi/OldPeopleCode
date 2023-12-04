@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 
 /**
  * Template created by Ayaan Govil on 8/21/2021.
@@ -23,7 +24,8 @@ import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 public class BaseRobot extends OpMode {
     // Declare subsystems and devices
     public DriveSubsystem drive;
-    //public LiftSubsystem arm;
+    public LiftSubsystem lift;
+    public ShooterSubsystem shooter;
     public ClawSubsystem claw;
     //public VisionSubsystem vision;
     //public ArmSubsystem arm;
@@ -39,8 +41,9 @@ public class BaseRobot extends OpMode {
 
         // Initialize your subsystems and devices
         drive = new DriveSubsystem(hardwareMap);
-        //arm = new LiftSubsystem(hardwareMap);
+        lift = new LiftSubsystem(hardwareMap);
         claw = new ClawSubsystem(hardwareMap);
+        shooter = new ShooterSubsystem(hardwareMap);
 //        vision = new VisionSubsystem(hardwareMap);
         //arm = new ArmSubsystem(hardwareMap);
 //        scoop = new ScoopSubsystem(hardwareMap);

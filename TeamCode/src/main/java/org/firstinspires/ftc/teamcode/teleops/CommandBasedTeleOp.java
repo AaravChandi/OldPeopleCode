@@ -9,10 +9,12 @@ import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 
 @TeleOp
 public class CommandBasedTeleOp extends BaseRobot {
     private double debounce;
+    private double driveBias = 0.4;
 
     @Override
     public void init() {
@@ -21,7 +23,7 @@ public class CommandBasedTeleOp extends BaseRobot {
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(
                 new RunCommand(
-                        () -> drive.mecanum(0.4*-gamepad1.left_stick_y, 0.4*-gamepad1.left_stick_x, 0.4*-gamepad1.right_stick_x)
+                        () -> drive.mecanum(driveBias*-gamepad1.left_stick_y, driveBias*-gamepad1.left_stick_x, driveBias*-gamepad1.right_stick_x)
                 )
         );
         /*drive.setDefaultCommand(
@@ -50,6 +52,8 @@ public class CommandBasedTeleOp extends BaseRobot {
         //drive.setDriveBias(arm.getDriveBias());
         new Trigger(gamepad1.a,
                 new RunCommand(( () -> {
+                    if (!Clock.hasElapsed(debounce, 0.5)) return;
+                    debounce = Clock.now();
                     if (claw.getState()=="PICKUP")
                         claw.setState(ClawSubsystem.State.DROP);
                     else
@@ -58,16 +62,49 @@ public class CommandBasedTeleOp extends BaseRobot {
 
 
                 })));
-        new Trigger(gamepad1.dpad_left,
+
+        new Trigger(gamepad1.right_bumper,
                 new RunCommand(( () -> {
-                    claw.setState(ClawSubsystem.State.PICKUP);
+                    shooter.setState(ShooterSubsystem.State.SHOOT);
 
                 })));
-        new Trigger(gamepad1.dpad_right,
+        new Trigger(!gamepad1.right_bumper,
                 new RunCommand(( () -> {
-                    claw.setState(ClawSubsystem.State.DROP);
+                    shooter.setState(ShooterSubsystem.State.LOAD);
 
                 })));
+        new Trigger(gamepad1.dpad_up,
+                new RunCommand(( () -> {
+                    lift.setState(LiftSubsystem.State.LIFTING);
+
+                })));
+        new Trigger(gamepad1.dpad_down,
+                new RunCommand(( () -> {
+                    lift.setState(LiftSubsystem.State.RELEASING);
+
+                })));
+        new Trigger(!gamepad1.dpad_down && !gamepad1.dpad_up,
+                new RunCommand(( () -> {
+                    lift.setState(LiftSubsystem.State.PAUSED);
+
+                })));
+        new Trigger(gamepad1.dpad_left || gamepad1.dpad_right,
+                new RunCommand(( () -> {
+                    lift.setState(LiftSubsystem.State.CARRY);
+
+                })));
+        new Trigger(gamepad1.right_trigger>0.5,
+                new RunCommand(( () -> {
+                    driveBias = 0.8;
+
+                })));
+        new Trigger(gamepad1.right_trigger<0.5,
+                new RunCommand(( () -> {
+                    driveBias = 0.4;
+
+                })));
+
+
         /*new Trigger(gamepad1.right_trigger>0.5, new RunCommand(( () -> intake.setState(IntakeSubsystem.State.INTAKING))));
         new Trigger(gamepad1.left_trigger>0.5, new RunCommand(( () -> intake.setState(IntakeSubsystem.State.OUTTAKING))));
         new Trigger(gamepad1.left_trigger<0.5 && gamepad1.right_trigger<0.5, new RunCommand(( () -> intake.setState(IntakeSubsystem.State.PAUSED))));*/

@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @Autonomous(preselectTeleOp = "CommandBasedTeleOp")
-public class CommandBasedAuto extends BaseRobot {
-//    SHPMecanumAutoDrive autoDrive;
+public class BlueAuto extends BaseRobot {
+    //    SHPMecanumAutoDrive autoDrive;
     //DriveSubsystem drive;
     VisionSubsystem vision;
 
@@ -28,14 +28,14 @@ public class CommandBasedAuto extends BaseRobot {
 //        autoDrive = new SHPMecanumAutoDrive(hardwareMap, kMotorNames, 0.15, 0.0, 0.0);
 //        autoDrive.enableFF(new FFController(0.01));
         //drive = new DriveSubsystem(hardwareMap);
-        vision = new VisionSubsystem(hardwareMap,"red");
-        location = vision.getLocationRed();
+        vision = new VisionSubsystem(hardwareMap,"blue");
+        location = vision.getLocationBlue();
         telemetry.addData("Location: ",location);
         claw.setState(ClawSubsystem.State.PICKUP);
     }
     public void init_loop() {
         super.init_loop();
-        location = vision.getLocationRed();
+        location = vision.getLocationBlue();
         telemetry.addData("Location: ", location);
         claw.setState(ClawSubsystem.State.PICKUP);
     }
@@ -46,19 +46,19 @@ public class CommandBasedAuto extends BaseRobot {
 
         CommandScheduler myCommand = CommandScheduler.getInstance();
 
-       myCommand.scheduleCommand(
-               new WaitCommand(2)
+        myCommand.scheduleCommand(
+                new WaitCommand(2)
                         //.then(new RunCommand(() -> {location = vision.getLocation();}))
                         //.then(new EncoderStraightDriveCommand(drive,"forward",10))
-                       //.then(new EncoderTurnDriveCommand(drive,"ccw",45))
+                        //.then(new EncoderTurnDriveCommand(drive,"ccw",45))
                         .then(new WaitCommand(0.5))
-                       //.then(new RunCommand(() -> {location = vision.getLocation();}))
+                        //.then(new RunCommand(() -> {location = vision.getLocation();}))
 
                         //.then(new DriveCommand(drive,0.025,0,0,3.5))
-                       .then(new EncoderStraightDriveCommand(drive,"forward",8,false))
-                       .then(new WaitCommand(1))
-                       //.then(new EncoderTurnZeroCommand(drive))
-                       //.then(new WaitCommand(1))
+                        .then(new EncoderStraightDriveCommand(drive,"forward",8,false))
+                        .then(new WaitCommand(1))
+                        //.then(new EncoderTurnZeroCommand(drive))
+                        //.then(new WaitCommand(1))
                         .then(new RunCommand(() -> {
                             if (location == 1) {
                                 myCommand.scheduleCommand(new EncoderTurnDriveCommand(drive,"ccw",90)
@@ -80,12 +80,11 @@ public class CommandBasedAuto extends BaseRobot {
                             }
 
                         }))
-                       //.then(new DriveCommand(drive,0.3,0,0,2,true))
-                       .then(new WaitCommand(5))
+                        //.then(new DriveCommand(drive,0.3,0,0,2,true))
+                        .then(new WaitCommand(5))
                         .then(new RunCommand(() -> {
                             claw.setState(ClawSubsystem.State.DROP);
                         }))
-                       //.then(new DriveCommand(drive,0.2,0,0,1,true))
 
                        /*
                         .then(new WaitCommand(0.5))

@@ -27,7 +27,7 @@ public class DriveSubsystem extends Subsystem {
     public final Encoder parallelEncoder, perpendicularEncoder;
     public final SHPIMU imu;
 
-    private double bias = kMaximumBias; // will always be between kMinimumBias and 1.0
+    private double bias = 1; // will always be between kMinimumBias and 1.0
 
     public DriveSubsystem(HardwareMap hardwareMap) {
         drive = new SHPMecanumDrive(hardwareMap, kMotorNames);
@@ -58,17 +58,12 @@ public class DriveSubsystem extends Subsystem {
         //drive.mecanum(leftY * bias, leftX * bias, rightX * bias); // robot oriented
     }
     public void robotmecanum(double leftY, double leftX, double rightX) {
-        Vector2d vector = new Vector2d(
-                leftY,
-                leftX
-        ).rotated(-(imu.getYaw(AngleUnit.RADIANS)));
-
         //drive.mecanum(vector.getX(),vector.getY(), rightX); // field oriented
         drive.mecanum(leftY * bias, leftX * bias, rightX * bias); // robot oriented
     }
 
     public void setDriveBias(double driveBias) {
-        bias = Range.clip(driveBias, kMinimumBias, kMaximumBias);
+        bias = driveBias;
     }
 
     public void enablePositionPID() {
